@@ -1,0 +1,11 @@
+---
+
+# The location to write output to
+#
+# Note: Ansible must be able to write to this location on your ansible controller.
+#       This location will also be used for holding temporary files that are
+#       created as part of the process of extracting config.
+bigip_to_ansible_output_path: /tmp/qkview
+
+# The qkview that you want to parse
+# bigip_to_ansible_qkview:

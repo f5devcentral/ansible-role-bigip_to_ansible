@@ -1,0 +1,16 @@
+Value Key NodeName ([^ ]+)
+Value Address (.*)
+Value Monitor (.*)
+
+ltm node /Common/ATL2WSTGMWENG01 {
+    address 10.6.8.45
+    monitor /Common/none
+}
+
+Start
+  ^ltm node ${NodeName} \{ -> Node
+
+Node
+  ^    address ${Address}
+  ^    monitor ${Monitor}
+  ^} -> Record

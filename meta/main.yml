@@ -1,0 +1,14 @@
+---
+dependencies: []
+
+galaxy_info:
+  role_name: bigip_to_ansible
+  author: caphrim007
+  description: A role that creates example Ansible playbooks using a BIG-IP reference config
+  company: F5 Networks
+  license: Apache
+  min_ansible_version: 2.7
+  galaxy_tags:
+    - f5
+    - networking
+    - bigip

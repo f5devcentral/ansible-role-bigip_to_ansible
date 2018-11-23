@@ -1,0 +1,8 @@
+---
+
+- name: Converge - present
+  hosts: all
+
+  roles:
+    - role: ansible-role-bigip_to_ansible
+      bigip_to_ansible_qkview: /Users/trupp/Dropbox/gsts2019/winter/10_6_1_165.qkview

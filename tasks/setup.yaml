@@ -1,0 +1,33 @@
+---
+
+- name: Install dependencies - Ubuntu
+  apt:
+    name: "{{ item }}"
+  loop:
+    - tar
+    - unzip
+    - gzip
+  when: ansible_os_family == 'Ubuntu'
+  delegate_to: localhost
+
+- name: Install dependencies - CentOS
+  yum:
+    name: "{{ item }}"
+  loop:
+    - tar
+    - unzip
+    - gzip
+  when: ansible_os_family == 'CentOS'
+  delegate_to: localhost
+
+- name: Install pip dependencies
+  pip:
+    name: "{{ item }}"
+  loop:
+    - textfsm
+
+- name: Ensure the output directory exists
+  file:
+    path: "{{ bigip_to_ansible_output_path }}"
+    state: directory
+  delegate_to: localhost
