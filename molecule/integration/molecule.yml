@@ -25,9 +25,7 @@ provisioner:
   inventory:
     host_vars:
       instance:
-        provider_server: ${F5_SERVER:-localhost}
-        provider_user: ${F5_USER:-admin}
-        provider_password: ${F5_PASSWORD:-secret}
+        bigip_to_ansible_qkview: /Users/trupp/Downloads/support1.qkview.tar.gz
   env:
     ANSIBLE_ROLES_PATH: ../../../
   lint:
@@ -37,7 +35,6 @@ provisioner:
 scenario:
   name: integration
   test_sequence:
-    - lint
     - destroy
     - dependency
     - syntax
