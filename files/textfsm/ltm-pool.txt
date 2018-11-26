@@ -1,0 +1,10 @@
+Value Required PoolName (.*)
+Value Monitor ([^ ]+)
+
+Start
+  ^#TMSH-VERSION:.* -> Pool
+
+Pool
+  ^ltm pool ${PoolName} {
+  ^    monitor ${Monitor}
+  ^} -> Record
