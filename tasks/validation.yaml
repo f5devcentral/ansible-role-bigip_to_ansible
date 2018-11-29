@@ -1,0 +1,12 @@
+---
+
+- name: Read qkview stats
+  stat:
+    path: "{{ bigip_to_ansible_qkview }}"
+  delegate_to: localhost
+  register: st
+
+- name: Fail is qkview does not exist
+  fail:
+    msg: "The specified qkview, {{ bigip_to_ansible_qkview }}, was not found."
+  when: not st.stat.exists|bool

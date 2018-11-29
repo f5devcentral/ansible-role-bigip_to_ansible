@@ -1,0 +1,17 @@
+---
+
+- name: Assign any discovered LTM HTTPS monitors to a local fact
+  set_fact:
+    raw_monitors: "{{ bigip_conf | parse_cli_textfsm(role_path + '/files/textfsm/ltm-https-monitor.txt') }}"
+  delegate_to: localhost
+
+- name: Order the discovered monitors so that parents would be correct
+  set_fact:
+    ordered_monitors: "{{ lookup('flatten_hierarchy', root='/Common/https', items=raw_monitors, name_key='MonitorName', parent_key='Parent') }}"
+  delegate_to: localhost
+
+- name: Template LTM HTTPS monitors out to a file
+  template:
+    src: ltm-https-monitor.j2
+    dest: "{{ bigip_to_ansible_output_result }}/ltm-https-monitor.yaml"
+  delegate_to: localhost

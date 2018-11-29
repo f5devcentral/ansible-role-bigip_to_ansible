@@ -1,25 +1,11 @@
 ---
 
+- import_tasks: dependencies.yaml
 - import_tasks: setup.yaml
-
-- name: Read qkview stats
-  stat:
-    path: "{{ bigip_to_ansible_qkview }}"
-  delegate_to: localhost
-  register: st
-
-- name: Fail is qkview does not exist
-  assert:
-    that:
-      - st.stat.exists|bool
-
-- name: Ensure output path does not end with a slash
-  set_fact:
-    bigip_to_ansible_output_path: "{{ bigip_to_ansible_output_path[0:-1] }}"
-  when: bigip_to_ansible_output_path[-1] == '/'
+- import_tasks: validation.yaml
 
 - name: Extract qkview
-  command: "tar zxvf {{ bigip_to_ansible_qkview }} -C {{ bigip_to_ansible_output_path }}"
+  command: "tar zxvf {{ bigip_to_ansible_qkview }} -C {{ bigip_to_ansible_output_extract }}"
   args:
     warn: no
   delegate_to: localhost
@@ -29,14 +15,22 @@
     path: "{{ item }}"
   delegate_to: localhost
   loop:
-    - "{{ bigip_to_ansible_output_path }}/config/bigip.conf"
-    - "{{ bigip_to_ansible_output_path }}/config/bigip_gtm.conf"
+    - "{{ bigip_to_ansible_output_extract }}/config/bigip.conf"
+    - "{{ bigip_to_ansible_output_extract }}/config/bigip_gtm.conf"
+    - "{{ bigip_to_ansible_output_extract }}/config/bigip_base.conf"
   register: st
 
 - name: Create General files
-  import_tasks: parser-bigip-conf.yaml
+  import_tasks: output/bigip.conf.yaml
   when: st.results.0.stat.exists|bool
 
 - name: Create GTM files
-  import_tasks: parser-bigip-gtm.yaml
+  import_tasks: output/bigip_gtm.conf.yaml
   when: st.results.1.stat.exists|bool
+
+- name: Create BIG-IP base files
+  import_tasks: output/bigip_base.conf.yaml
+  when: st.results.2.stat.exists|bool
+
+- import_tasks: output/playbook.yaml
+- import_tasks: output/inventory.yaml

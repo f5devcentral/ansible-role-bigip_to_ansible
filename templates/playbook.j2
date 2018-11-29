@@ -1,0 +1,23 @@
+---
+
+- name: Recreate BIG-IP configuration with Ansible
+  hosts: bigip
+  connection: local
+  any_errors_fatal: true
+
+  roles:
+    - role: f5devcentral.f5ansible
+
+  tasks:
+{% if bigip_to_ansible_output_result + '/ltm-http-monitor.yaml' in files_found %}
+    - import_tasks: {{ bigip_to_ansible_output_result }}/ltm-http-monitor.yaml
+{% endif %}
+{% if bigip_to_ansible_output_result + '/ltm-https-monitor.yaml' in files_found %}
+    - import_tasks: {{ bigip_to_ansible_output_result }}/ltm-https-monitor.yaml
+{% endif %}
+{% if bigip_to_ansible_output_result + '/ltm-tcp-monitor.yaml' in files_found %}
+    - import_tasks: {{ bigip_to_ansible_output_result }}/ltm-tcp-monitor.yaml
+{% endif %}
+{% if bigip_to_ansible_output_result + '/ltm-pool.yaml' in files_found %}
+    - import_tasks: {{ bigip_to_ansible_output_result }}/ltm-pool.yaml
+{% endif %}

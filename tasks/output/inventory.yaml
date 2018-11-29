@@ -1,0 +1,14 @@
+---
+
+- name: Write generic inventory file
+  copy:
+    content: "bigip"
+    dest: "{{ bigip_to_ansible_output_inventory }}/hosts"
+  delegate_to: localhost
+  register: f
+
+- name: Write host_vars file
+  template:
+    src: host-vars.j2
+    dest: "{{ bigip_to_ansible_output_host_vars }}/bigip.yaml"
+  delegate_to: localhost

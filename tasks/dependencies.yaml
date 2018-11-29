@@ -1,0 +1,29 @@
+---
+
+- name: Install dependencies - Ubuntu
+  apt:
+    name: "{{ item }}"
+  loop:
+    - tar
+    - unzip
+    - gzip
+  when: ansible_os_family == 'Ubuntu'
+  delegate_to: localhost
+
+- name: Install dependencies - CentOS
+  yum:
+    name: "{{ item }}"
+  loop:
+    - tar
+    - unzip
+    - gzip
+  when: ansible_os_family == 'CentOS'
+  delegate_to: localhost
+
+- name: Install pip dependencies
+  pip:
+    name: "{{ item }}"
+  loop:
+    - textfsm
+    - anytree
+    - q

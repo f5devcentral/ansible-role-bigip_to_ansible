@@ -1,5 +1,6 @@
 ---
-dependencies: []
+dependencies:
+  - f5devcentral.f5ansible
 
 galaxy_info:
   role_name: bigip_to_ansible

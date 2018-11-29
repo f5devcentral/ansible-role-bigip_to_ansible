@@ -1,0 +1,38 @@
+Value Required MonitorName (.*)
+Value Adaptive (.*)
+Value Parent (.*)
+Value Destination (.*)
+Value Interval (.*)
+Value IpDscp (.*)
+Value Receive (.*)
+Value ReceiveDisable (.*)
+Value Send (.*)
+Value TimeUntilUp (.*)
+Value Timeout (.*)
+Value UpInterval (.*)
+
+Start
+  ^#TMSH-VERSION:.* -> Monitor
+
+Monitor
+  ^ltm monitor tcp ${MonitorName} {
+  ^    adaptive ${Adaptive}
+  ^    defaults-from ${Parent}
+  ^    destination ${Destination}
+  ^    interval ${Interval}
+  ^    ip-dscp ${IpDscp}
+  ^    recv-disable ${ReceiveDisable}
+  ^    time-until-up ${TimeUntilUp}
+  ^    timeout ${Timeout}
+  ^    up-interval ${UpInterval}
+  # Two receives here to treat cases where the value is wrapped in quotes
+  # and where it is not wrapped in quotes. We do not want to include the
+  # quotes in the value that is stored.
+  ^    recv "${Receive}"
+  ^    recv ${Receive}
+  # Two sends here to treat cases where the value is wrapped in quotes
+  # and where it is not wrapped in quotes. We do not want to include the
+  # quotes in the value that is stored.
+  ^    send "${Send}"
+  ^    send ${Send}
+  ^} -> Record

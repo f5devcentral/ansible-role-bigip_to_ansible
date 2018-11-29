@@ -1,0 +1,15 @@
+---
+
+ansible_host: localhost
+
+provider:
+  password: secret
+{% for x in cm_device %}
+{% if x['SelfDevice'] == 'true' %}
+  server: {{ x['ManagementIp'] }}
+{% endif %}
+{% endfor %}
+  server_port: 443
+  transport: rest
+  user: admin
+  validate_certs: no

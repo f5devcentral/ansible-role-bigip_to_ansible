@@ -1,33 +1,26 @@
 ---
 
-- name: Install dependencies - Ubuntu
-  apt:
-    name: "{{ item }}"
-  loop:
-    - tar
-    - unzip
-    - gzip
-  when: ansible_os_family == 'Ubuntu'
-  delegate_to: localhost
+- name: Ensure output path does not end with a slash
+  set_fact:
+    bigip_to_ansible_output_path: "{{ bigip_to_ansible_output_path[0:-1] }}"
+  when: bigip_to_ansible_output_path[-1] == '/'
 
-- name: Install dependencies - CentOS
-  yum:
-    name: "{{ item }}"
-  loop:
-    - tar
-    - unzip
-    - gzip
-  when: ansible_os_family == 'CentOS'
-  delegate_to: localhost
+- name: Set directory facts for work
+  set_fact:
+    bigip_to_ansible_output_extract: "{{ bigip_to_ansible_output_path }}/extract"
+    bigip_to_ansible_output_result: "{{ bigip_to_ansible_output_path }}/result"
+    bigip_to_ansible_output_inventory: "{{ bigip_to_ansible_output_path }}/result/inventory"
+    bigip_to_ansible_output_host_vars: "{{ bigip_to_ansible_output_path }}/result/inventory/host_vars"
 
-- name: Install pip dependencies
-  pip:
-    name: "{{ item }}"
-  loop:
-    - textfsm
-
-- name: Ensure the output directory exists
+- name: Ensure output directories exist
   file:
-    path: "{{ bigip_to_ansible_output_path }}"
+    path: "{{ item }}"
     state: directory
+  loop:
+    - "{{ bigip_to_ansible_output_extract }}"
+    - "{{ bigip_to_ansible_output_result }}"
+    - "{{ bigip_to_ansible_output_inventory }}"
+    - "{{ bigip_to_ansible_output_host_vars }}"
   delegate_to: localhost
+
+

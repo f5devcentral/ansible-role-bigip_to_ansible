@@ -1,0 +1,11 @@
+---
+
+ansible_host: localhost
+
+provider:
+  password: admin
+  server: localhost
+  server_port: 10443
+  transport: rest
+  user: admin
+  validate_certs: no

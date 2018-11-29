@@ -1,0 +1,20 @@
+---
+
+- name: Load entire bigip.conf file into temp fact
+  set_fact:
+    bigip_conf: "{{ lookup('file', bigip_to_ansible_output_extract + '/config/bigip.conf') }}"
+  delegate_to: localhost
+
+- import_tasks: ltm-http-monitor.yaml
+- import_tasks: ltm-https-monitor.yaml
+- import_tasks: ltm-tcp-monitor.yaml
+- import_tasks: ltm-pool.yaml
+
+#- debug:
+#    var: bigip_conf | parse_cli_textfsm(role_path + '/files/textfsm/ltm-virtual-server.txt')
+
+#- debug:
+#    var: bigip_conf | parse_cli_textfsm(role_path + '/files/textfsm/ltm-pool-member.txt')
+
+# - debug:
+#    var: bigip_conf | parse_cli_textfsm(role_path + '/files/textfsm/ltm-node.txt')

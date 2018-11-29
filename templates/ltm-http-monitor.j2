@@ -1,0 +1,44 @@
+- name: Create LTM HTTP monitors
+  bigip_monitor_http:
+{%- raw %}
+    name: "{{ item.name }}"
+    parent: "{{ item.parent|default(omit) }}"
+    ip: "{{ item.ip|default(omit) }}"
+    port: "{{ item.port|default(omit) }}"
+    interval: "{{ item.interval|default(omit) }}"
+    receive: "{{ item.receive|default(omit) }}"
+    receive_disable: "{{ item.receive_disable|default(omit) }}"
+    send: "{{ item.send|default(omit) }}"
+    time_until_up: "{{ item.time_until_up|default(omit) }}"
+    timeout: "{{ item.timeout|default(omit) }}"
+    provider: "{{ provider }}"
+{% endraw %}
+  loop:
+{% for x in ordered_monitors %}
+    - name: {{ x['MonitorName'] }}
+{% if x['Parent'] != '' and x['Parent'] != 'Common' %}
+      parent: {{ x['Parent'] }}
+{% endif %}
+{% if x['Destination'] != '' %}
+      ip: "{{ x['Destination'].split(':')[0] }}"
+      port: "{{ x['Destination'].split(':')[1] }}"
+{% endif %}
+{% if x['Interval'] != '' %}
+      interval: {{ x['Interval'] }}
+{% endif %}
+{% if x['Receive'] != '' %}
+      receive: "{{ x['Receive'] }}"
+{% endif %}
+{% if x['ReceiveDisable'] != '' %}
+      receive_disable: "{{ x['ReceiveDisable'] }}"
+{% endif %}
+{% if x['Send'] != '' %}
+      send: "{{ x['Send'] }}"
+{% endif %}
+{% if x['TimeUntilUp'] != '' %}
+      time_until_up: {{ x['TimeUntilUp'] }}
+{% endif %}
+{% if x['Timeout'] != '' %}
+      timeout: {{ x['Timeout'] }}
+{% endif %}
+{% endfor %}

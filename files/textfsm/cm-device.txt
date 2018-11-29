@@ -1,0 +1,13 @@
+Value Hostname (.*)
+Value ManagementIp (.*)
+Value SelfDevice (true|false)
+
+Start
+  ^#TMSH-VERSION:.* -> CmDevice
+
+CmDevice
+  ^cm device .* {
+  ^    hostname ${Hostname}
+  ^    management-ip ${ManagementIp}
+  ^    self-device ${SelfDevice}
+  ^} -> Record

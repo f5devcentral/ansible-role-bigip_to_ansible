@@ -1,0 +1,11 @@
+---
+
+- name: Load entire bigip_base.conf file into temp fact
+  set_fact:
+    bigip_conf: "{{ lookup('file', bigip_to_ansible_output_extract + '/config/bigip_base.conf') }}"
+  delegate_to: localhost
+
+- name: Assign any discovered LTM pools to a local fact
+  set_fact:
+    cm_device: "{{ bigip_conf | parse_cli_textfsm(role_path + '/files/textfsm/cm-device.txt') }}"
+  delegate_to: localhost
