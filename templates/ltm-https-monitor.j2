@@ -12,6 +12,7 @@
     time_until_up: "{{ item.time_until_up|default(omit) }}"
     timeout: "{{ item.timeout|default(omit) }}"
     provider: "{{ provider }}"
+  delegate_to: localhost
 {% endraw %}
   loop:
 {% for x in ordered_monitors %}

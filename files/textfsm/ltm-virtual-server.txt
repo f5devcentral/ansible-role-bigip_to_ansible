@@ -1,28 +1,36 @@
 Value Required VirtualName (.*)
 Value Destination (.*)
+Value Description (.*)
 Value Mask (.*)
 Value IpProtocol (.*)
 Value Pool (.*)
-Value Profile ([^ ]+)
 Value Source (.*)
 Value TranslateAddress (enabled|disabled)
 Value TranslatePort (enabled|disabled)
-Value List LtmProfiles ([^ ]+)
+Value List Rules (.*)
+Value List SecurityLogProfiles (.*)
 
 Start
   ^#TMSH-VERSION:.* -> VirtualServer
 
 VirtualServer
   ^ltm virtual ${VirtualName} {
-  ^    destination ${Destination}
+  ^    destination \/(.*)\/${Destination}
+  ^    description ${Description}
   ^    mask ${Mask}
   ^    ip-protocol ${IpProtocol}
   ^    pool ${Pool}
   ^    source ${Source}
-  ^    profiles { -> LtmProfile
+  ^    rules { -> Rules
+  ^    security-log-profiles { -> SecurityLogProfiles
   ^    translate-port ${TranslatePort}
   ^    translate-address ${TranslateAddress}
   ^} -> Record
 
-LtmProfile
-  ^        ${LtmProfiles} {
+Rules
+  ^        ${Rules}
+  ^    } -> VirtualServer
+
+SecurityLogProfiles
+  ^        ${SecurityLogProfiles}
+  ^    } -> VirtualServer

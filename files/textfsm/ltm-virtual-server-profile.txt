@@ -1,0 +1,21 @@
+Value Filldown VirtualName (.*)
+Value Required Profile (.*)
+Value ProfileContext (.*)
+
+Start
+  ^#TMSH-VERSION:.* -> VirtualServer
+
+VirtualServer
+  ^ltm virtual ${VirtualName} {
+  ^    profiles { -> Profile
+  ^} -> Record
+
+Profile
+  ^        ${Profile} { } -> Next.Record Profile
+  ^        ${Profile} { -> ProfileAttrs
+  ^        } -> Next.Record Profile
+  ^    } -> VirtualServer
+
+ProfileAttrs
+  ^            context ${ProfileContext} -> Profile
+  ^} -> VirtualServer

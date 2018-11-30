@@ -4,6 +4,7 @@
     name: "{{ item.name }}"
     monitors: "{{ item.monitors|default(omit) }}"
     provider: "{{ provider }}"
+  delegate_to: localhost
 {% endraw %}
   loop:
 {% for x in ltm_pools %}

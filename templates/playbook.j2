@@ -21,3 +21,6 @@
 {% if bigip_to_ansible_output_result + '/ltm-pool.yaml' in files_found %}
     - import_tasks: {{ bigip_to_ansible_output_result }}/ltm-pool.yaml
 {% endif %}
+{% if bigip_to_ansible_output_result + '/ltm-virtual-server.yaml' in files_found %}
+    - import_tasks: {{ bigip_to_ansible_output_result }}/ltm-virtual-server.yaml
+{% endif %}
