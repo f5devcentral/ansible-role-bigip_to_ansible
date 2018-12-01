@@ -9,11 +9,8 @@
 - import_tasks: ltm-https-monitor.yaml
 - import_tasks: ltm-tcp-monitor.yaml
 - import_tasks: ltm-pool.yaml
+- import_tasks: ltm-pool-member.yaml
 - import_tasks: ltm-virtual-server.yaml
-
-
-#- debug:
-#    var: bigip_conf | parse_cli_textfsm(role_path + '/files/textfsm/ltm-pool-member.txt')
 
 # - debug:
 #    var: bigip_conf | parse_cli_textfsm(role_path + '/files/textfsm/ltm-node.txt')

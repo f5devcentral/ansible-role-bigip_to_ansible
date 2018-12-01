@@ -1,0 +1,37 @@
+Value Filldown PoolName (.*)
+Value Required MemberName (.*)
+Value PoolMemberAddress (.*)
+Value PoolMemberFqdn (.*)
+Value Description (.*)
+Value ConnectionLimit (.*)
+Value RateLimit (.*)
+Value Ratio (.*)
+Value PriorityGroup (.*)
+Value Monitor (.*)
+
+Start
+  ^#TMSH-VERSION:.* -> Pool
+
+Pool
+  ^ltm pool ${PoolName} {
+  ^    members { -> PoolMember
+
+PoolMember
+  ^        ${MemberName} { -> PoolMemberAttr
+  ^        } -> Next.Record PoolMember
+  ^    } -> Pool
+
+PoolMemberAttr
+  ^            address ${PoolMemberAddress}
+  ^            description ${Description}
+  ^            connection-limit ${ConnectionLimit}
+  ^            rate-limit ${RateLimit}
+  ^            ratio ${Ratio}
+  ^            priority-group ${PriorityGroup}
+  ^            monitor ${Monitor}
+  ^            fqdn { -> FqdnMember
+  ^        } -> Next.Record PoolMember
+  ^} -> Pool
+
+FqdnMember
+  ^                name ${PoolMemberFqdn}

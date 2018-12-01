@@ -1,17 +1,39 @@
-# Ansible Role: bigip_gslb
+# Ansible Role: bigip_to_ansible
 
-Performs steps needed to create and manage a Global Services Load Balancing (GSLB) object
-on a BIG-IP DNS platform.
+Performs steps needed to convert a BIG-IP QKView into a series of Ansible playbooks that
+can reconstruct the BIG-IP configuration.
 
-GSLB is also known in F5 lingo as a "Wide IP". Regardless of your terminology of choice,
-this role can be used to manage different sets of GSLB configuration.
+## Goals of this role
 
-Note that the "typical" way that GSLB is deployed involves at least two serves; one running
-GTM/DNS and N more running LTM (or some other supported platform). This role specifically
-handles the GTM/DNS side of this configuration.
+This process will not be perfect, but we’re not aiming for perfect. We want to get “close”,
+or put a significant amount of the work behind us by leveraging software.
 
-It is not necessary to have the LTM portion pre-configured, however, to make use of this
-role.
+We realize this cannot realistically be an automated process. There are some things that are
+just simply not stored in BIG-IP configs (like passwords and things).
+
+We’re ok with that. We want to turn weeks/months of manual conversion into (at best) a single
+day’s worth of conversion.
+
+## Limitations
+
+This role is a bit of art mixed with a bit of science. It is not, and will never be, able
+to completely reproduce a BIG-IP configuration perfectly. This is because of the many known
+limitations of this process. Including,
+
+* Passwords are not stored in configs
+* Some things may be stored in an encrypted form
+* Not all configuration is represented as files (such as ASM policies)
+* Some settings and parameters are not supported by Ansible
+* Depending on the environment, extra tools and apps may be installed that are not
+  represented in an F5 config and we would have no way to know what those are
+* Data groups may not be available
+* iApps are a whole big problem because their deployed configuration is only identifiable
+  by custom resource names. It would be nearly impossible to reproduce an iApp and the
+  associated config.
+* Commands may change across versions (although we can probably handle this case, albeit
+  with more logic in the role).
+* Inputs in BIG-IP configuration do not always cleanly map to Ansible parameters.
+
 
 ## Requirements
 
@@ -21,40 +43,52 @@ None.
 
 Available variables are listed below. For their default values, see `defaults/main.yml`:
 
-    provider_server: localhost
-    provider_server_port: 443
-    provider_user: admin
-    provider_password: secret
-    provider_validate_certs: no
-    provider_transport: rest
-    provider_timeout: 120
+    bigip_to_ansible_output_path: /tmp/qkview
 
-Establishes initial connection to your BIG-IQ. These values are substituted into
-your ``provider`` module parameter.
+The directory where you want to write configuration to. If the directory already exists,
+it will be used as the destination of created files. Multiple devices in a playbook which
+use this role will correctly create separate host vars and hosts in inventory.
 
-    bigip_glsb_app_name: localhost
+    bigip_to_ansible_qkview:
 
-The name of the GSLB app being created.
-
-    bigip_glsb_app_domain: gslb.local.com
-
-The domain of the app being created.
-
-    bigip_glsb_pool_lb_method: round-robin
-
+The QKView to parse for configuration. You can provide separate QKViews if you organize
+your playbook accordingly. For a reference example, view the Example Playbook example
+below.
 
 ## Dependencies
 
 * You must have an existing QKView created and located on your Ansible controller.
 * Ansible must be able to write to the output location you specify to the role.
 
-## Example Playbook
+## Simple Example Playbook
 
     - name: Convert a qkview to a set of Ansible playbooks
       hosts: bigip
       roles:
         - role: f5devcentral.bigip_to_ansible
-          qkview: /path/to/localhost.localdomain.qkview
+          bigip_to_ansible_qkview: /path/to/localhost.localdomain.qkview
+
+## Download qkviews from many BIG-IPs and write configs to a single location
+
+    - name: Convert a qkview to a set of Ansible playbooks
+      hosts: bigips
+      
+      tasks:
+        - name: Download qkview
+          bigip_qkview:
+            dest: "/tmp/{{ inventory_hostname }}.qkview"
+            provider:
+              server: "{{ ansible_host }}"
+              server_port: 443
+              user: admin
+              password: secret
+              validate_certs: no
+
+        - name: Extract configuration to Ansible playbooks
+          import_role:
+            name: f5devcentral.bigip_to_ansible
+          vars:
+              bigip_to_ansible_qkview: "/tmp/{{ inventory_hostname }}.qkview"
 
 ## License
 
