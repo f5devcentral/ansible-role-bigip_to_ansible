@@ -1,14 +1,32 @@
 ---
 
-- name: Write generic inventory file
-  copy:
-    content: "bigip"
-    dest: "{{ bigip_to_ansible_output_inventory }}/hosts"
+- name: Write hosts to inventory
+  lineinfile:
+    line: "{{ inventory_hostname }}"
+    path: "{{ bigip_to_ansible_output_inventory }}/hosts"
+    create: yes
   delegate_to: localhost
-  register: f
+  run_once: yes
+  loop: "{{ ansible_play_hosts }}"
+
+- name: Create group of all BIG-IPs
+  lineinfile:
+    line: "[bigip]"
+    path: "{{ bigip_to_ansible_output_inventory }}/hosts"
+    insertbefore: BOF
+  delegate_to: localhost
+  run_once: yes
 
 - name: Write host_vars file
   template:
-    src: host-vars.j2
-    dest: "{{ bigip_to_ansible_output_host_vars }}/bigip.yaml"
+    src: hostvars/general.j2
+    dest: "{{ bigip_to_ansible_output_assemble }}/{{ inventory_hostname }}-host-vars.yaml"
+  delegate_to: localhost
+
+- name: Assemble host vars into a file
+  assemble:
+    src: "{{ bigip_to_ansible_output_assemble }}"
+    dest: "{{ bigip_to_ansible_output_host_vars }}/{{ inventory_hostname }}.yaml"
+    regexp: "{{ inventory_hostname}}-"
+    delimiter: "\n"
   delegate_to: localhost

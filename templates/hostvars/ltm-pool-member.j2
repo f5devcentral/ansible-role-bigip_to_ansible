@@ -1,0 +1,43 @@
+ltm_pool_members:
+{% for x in ltm_pool_members %}
+  - name: {{ x['MemberName'].split(':')[0] }}
+    port: {{ x['MemberName'].split(':')[1] }}
+{% if x['PoolName'] != '' %}
+    pool: {{ x['PoolName'] }}
+{% endif %}
+{% if x['PoolMemberAddress'] != '' %}
+    address: {{ x['PoolMemberAddress'] }}
+{% endif %}
+{% if x['PoolMemberFqdn'] != '' %}
+    fqdn: {{ x['PoolMemberFqdn'] }}
+    fqdn_auto_populate: yes
+{% endif %}
+{% if x['Description'] != '' %}
+    description: {{ x['Description'] }}
+{% endif %}
+{% if x['ConnectionLimit'] != '' %}
+    connection_limit: {{ x['ConnectionLimit'] }}
+{% endif %}
+{% if x['RateLimit'] != '' %}
+    rate_limit: {{ x['RateLimit'] }}
+{% endif %}
+{% if x['Ratio'] != '' %}
+    ratio: {{ x['Ratio'] }}
+{% endif %}
+{% if x['PriorityGroup'] != '' %}
+    priority_group: {{ x['PriorityGroup'] }}
+{% endif %}
+{% if x['Monitor'] != '' %}
+    monitors:
+{% for monitor in x['Monitor']|monitors_list %}
+      - {{ monitor }}
+{% endfor %}
+    availability_requirements:
+{% if 'of {' in x['Monitor'] %}
+      type: at_least
+      at_least: {{ x['Monitor'].split(' ')[1] }}
+{% else %}
+      type: all
+{% endif %}
+{% endif %}
+{% endfor %}

@@ -1,0 +1,29 @@
+https_monitors:
+{% for x in ordered_https_monitors %}
+  - name: {{ x['MonitorName'] }}
+{% if x['Parent'] != '' and x['Parent'] != 'Common' %}
+    parent: {{ x['Parent'] }}
+{% endif %}
+{% if x['Destination'] != '' %}
+    ip: "{{ x['Destination'].split(':')[0] }}"
+    port: "{{ x['Destination'].split(':')[1] }}"
+{% endif %}
+{% if x['Interval'] != '' %}
+    interval: {{ x['Interval'] }}
+{% endif %}
+{% if x['Receive'] != '' %}
+    receive: "{{ x['Receive'] }}"
+{% endif %}
+{% if x['ReceiveDisable'] != '' %}
+    receive_disable: "{{ x['ReceiveDisable'] }}"
+{% endif %}
+{% if x['Send'] != '' %}
+    send: "{{ x['Send'] }}"
+{% endif %}
+{% if x['TimeUntilUp'] != '' %}
+    time_until_up: {{ x['TimeUntilUp'] }}
+{% endif %}
+{% if x['Timeout'] != '' %}
+    timeout: {{ x['Timeout'] }}
+{% endif %}
+{% endfor %}

@@ -1,0 +1,10 @@
+    - name: Create iRules
+      bigip_irule:
+{%- raw %}
+        name: "{{ item.name }}"
+        src: "{{ item.src|default(omit) }}"
+        module: ltm
+        provider: "{{ provider }}"
+      delegate_to: localhost
+      loop: "{{ ltm_irules }}"
+{% endraw %}

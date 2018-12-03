@@ -1,19 +1,8 @@
 ---
 
-- name: Check to see if includable exist
-  find:
-    path: "{{ bigip_to_ansible_output_result }}"
-  delegate_to: localhost
-  register: f
-
-- name: Set fact with names of files found
-  set_fact:
-    files_found: "{{ f.files | json_query('[].path') }}"
-  delegate_to: localhost
-  when: f.matched > 0
-
 - name: Write playbook file if required
   template:
     src: playbook.j2
     dest: "{{ bigip_to_ansible_output_result }}/playbook.yaml"
   delegate_to: localhost
+  run_once: yes

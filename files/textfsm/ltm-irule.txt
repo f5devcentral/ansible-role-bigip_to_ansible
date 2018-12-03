@@ -1,0 +1,7 @@
+Value Required IruleName (.*)
+
+Start
+  ^#TMSH-VERSION:.* -> Irule
+
+Irule
+  ^ltm rule ${IruleName} { -> Record

@@ -9,21 +9,16 @@
     - role: f5devcentral.f5ansible
 
   tasks:
-{% if bigip_to_ansible_output_result + '/ltm-http-monitor.yaml' in files_found %}
-    - import_tasks: {{ bigip_to_ansible_output_result }}/ltm-http-monitor.yaml
-{% endif %}
-{% if bigip_to_ansible_output_result + '/ltm-https-monitor.yaml' in files_found %}
-    - import_tasks: {{ bigip_to_ansible_output_result }}/ltm-https-monitor.yaml
-{% endif %}
-{% if bigip_to_ansible_output_result + '/ltm-tcp-monitor.yaml' in files_found %}
-    - import_tasks: {{ bigip_to_ansible_output_result }}/ltm-tcp-monitor.yaml
-{% endif %}
-{% if bigip_to_ansible_output_result + '/ltm-pool.yaml' in files_found %}
-    - import_tasks: {{ bigip_to_ansible_output_result }}/ltm-pool.yaml
-{% endif %}
-{% if bigip_to_ansible_output_result + '/ltm-pool-member.yaml' in files_found %}
-    - import_tasks: {{ bigip_to_ansible_output_result }}/ltm-pool-member.yaml
-{% endif %}
-{% if bigip_to_ansible_output_result + '/ltm-virtual-server.yaml' in files_found %}
-    - import_tasks: {{ bigip_to_ansible_output_result }}/ltm-virtual-server.yaml
-{% endif %}
+{% include "ltm-irule.j2" %}
+
+{% include "ltm-http-monitor.j2" %}
+
+{% include "ltm-https-monitor.j2" %}
+
+{% include "ltm-tcp-monitor.j2" %}
+
+{% include "ltm-pool.j2" %}
+
+{% include "ltm-pool-member.j2" %}
+
+{% include "ltm-virtual-server.j2" %}

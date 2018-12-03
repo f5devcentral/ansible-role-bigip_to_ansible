@@ -7,11 +7,11 @@
 
 - name: Order the discovered monitors so that parents would be correct
   set_fact:
-    ordered_monitors: "{{ lookup('flatten_hierarchy', root='/Common/http', items=raw_monitors, name_key='MonitorName', parent_key='Parent') }}"
+    ordered_http_monitors: "{{ lookup('flatten_hierarchy', root='/Common/http', items=raw_monitors, name_key='MonitorName', parent_key='Parent') }}"
   delegate_to: localhost
 
 - name: Template LTM HTTP monitors out to a file
   template:
-    src: ltm-http-monitor.j2
-    dest: "{{ bigip_to_ansible_output_result }}/ltm-http-monitor.yaml"
+    src: hostvars/ltm-http-monitor.j2
+    dest: "{{ bigip_to_ansible_output_assemble }}/{{ inventory_hostname }}-ltm-http-monitor.yaml"
   delegate_to: localhost

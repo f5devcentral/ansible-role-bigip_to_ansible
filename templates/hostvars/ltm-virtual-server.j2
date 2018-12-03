@@ -1,0 +1,61 @@
+ltm_virtual_servers:
+{% for x in raw_virtuals %}
+{% set profiles = raw_virtual_profiles | selectattr("VirtualName", 'match', x['VirtualName']) | list %}
+  - name: {{ x['VirtualName'] }}
+{% if x['Destination'] != '' %}
+    destination: "{{ x['Destination'].split(':')[0] }}"
+    port: "{{ x['Destination'].split(':')[1] }}"
+{% endif %}
+{% if x['Mask'] != '' %}
+    mask: {{ x['Mask'] }}
+{% endif %}
+{% if x['IpProtocol'] != '' %}
+    ip_protocol: {{ x['IpProtocol'] }}
+{% endif %}
+{% if x['Pool'] != '' %}
+    pool: {{ x['Pool'] }}
+{% endif %}
+{% if x['Description'] != '' %}
+    description: {{ x['Description'] }}
+{% endif %}
+{% if x['Source'] != '' %}
+    source: {{ x['Source'] }}
+{% endif %}
+{% if x['TranslateAddress'] != '' %}
+{% if x['TranslateAddress'] == 'enabled' %}
+    address_translation: yes
+{% else %}
+    address_translation: no
+{% endif %}
+{% endif %}
+{% if x['TranslatePort'] != '' %}
+{% if x['TranslatePort'] == 'enabled' %}
+    port_translation: yes
+{% else %}
+    port_translation: no
+{% endif %}
+{% endif %}
+{% if x['Rules']|count > 0 %}
+    irules:
+{% for rule in x['Rules'] %}
+      - {{ rule }}
+{% endfor %}
+{% endif %}
+{% if x['SecurityLogProfiles']|count > 0 %}
+    security_log_profiles:
+{% for profile in x['SecurityLogProfiles'] %}
+      - {{ profile }}
+{% endfor %}
+{% endif %}
+{% if profiles|count > 0 %}
+    profiles:
+{% for profile in profiles %}
+      - name: {{ profile['Profile'] }}
+{% if profile['ProfileContext'] == 'serverside' %}
+        context: server-side
+{% elif profile['ProfileContext'] == 'clientside' %}
+        context: client-side
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endfor %}

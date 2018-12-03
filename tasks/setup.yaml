@@ -11,6 +11,8 @@
     bigip_to_ansible_output_result: "{{ bigip_to_ansible_output_path }}/result"
     bigip_to_ansible_output_inventory: "{{ bigip_to_ansible_output_path }}/result/inventory"
     bigip_to_ansible_output_host_vars: "{{ bigip_to_ansible_output_path }}/result/inventory/host_vars"
+    bigip_to_ansible_output_assemble: "{{ bigip_to_ansible_output_path }}/assemble/"
+    bigip_to_ansible_output_files: "{{ bigip_to_ansible_output_path }}/result/files"
 
 - name: Ensure output directories exist
   file:
@@ -21,6 +23,8 @@
     - "{{ bigip_to_ansible_output_result }}"
     - "{{ bigip_to_ansible_output_inventory }}"
     - "{{ bigip_to_ansible_output_host_vars }}"
+    - "{{ bigip_to_ansible_output_assemble }}"
+    - "{{ bigip_to_ansible_output_files }}"
   delegate_to: localhost
 
 

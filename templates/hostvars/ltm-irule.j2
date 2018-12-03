@@ -1,0 +1,5 @@
+ltm_irules:
+{% for x in ltm_irules %}
+  - name: {{ x['IruleName'] }}
+    src: "{{ bigip_to_ansible_output_files }}/{{ inventory_hostname }}-{{ x['IruleName'].replace('/', '-') }}-ltm-irule.yaml"
+{% endfor %}

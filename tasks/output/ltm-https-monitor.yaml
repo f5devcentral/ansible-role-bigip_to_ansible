@@ -7,11 +7,11 @@
 
 - name: Order the discovered monitors so that parents would be correct
   set_fact:
-    ordered_monitors: "{{ lookup('flatten_hierarchy', root='/Common/https', items=raw_monitors, name_key='MonitorName', parent_key='Parent') }}"
+    ordered_https_monitors: "{{ lookup('flatten_hierarchy', root='/Common/https', items=raw_monitors, name_key='MonitorName', parent_key='Parent') }}"
   delegate_to: localhost
 
 - name: Template LTM HTTPS monitors out to a file
   template:
-    src: ltm-https-monitor.j2
-    dest: "{{ bigip_to_ansible_output_result }}/ltm-https-monitor.yaml"
+    src: hostvars/ltm-https-monitor.j2
+    dest: "{{ bigip_to_ansible_output_assemble }}/{{ inventory_hostname }}-ltm-https-monitor.yaml"
   delegate_to: localhost

@@ -1,15 +1,9 @@
-- name: Create pools
-  bigip_pool:
+    - name: Create pools
+      bigip_pool:
 {%- raw %}
-    name: "{{ item.name }}"
-    monitors: "{{ item.monitors|default(omit) }}"
-    provider: "{{ provider }}"
-  delegate_to: localhost
+        name: "{{ item.name }}"
+        monitors: "{{ item.monitors|default(omit) }}"
+        provider: "{{ provider }}"
+      delegate_to: localhost
+      loop: "{{ ltm_pools }}"
 {% endraw %}
-  loop:
-{% for x in ltm_pools %}
-    - name: {{ x['PoolName'] }}
-{% if x['Monitor'] != '' %}
-      monitors: {{ x['Monitor'] }}
-{% endif %}
-{% endfor %}

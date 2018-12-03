@@ -1,0 +1,19 @@
+---
+
+- name: Assign any discovered LTM iRules to a local fact
+  set_fact:
+    ltm_irules: "{{ bigip_conf | parse_cli_textfsm(role_path + '/files/textfsm/ltm-irule.txt') }}"
+  delegate_to: localhost
+
+- name: Template LTM iRules out to a file
+  copy:
+    content: "when HTTP_REQUEST { }"
+    dest: "{{ bigip_to_ansible_output_files }}/{{ inventory_hostname }}-{{ item.IruleName.replace('/', '-') }}-ltm-irule.yaml"
+  loop: "{{ ltm_irules }}"
+  delegate_to: localhost
+
+- name: Template LTM iRule facts out to file
+  template:
+    src: hostvars/ltm-irule.j2
+    dest: "{{ bigip_to_ansible_output_assemble }}/{{ inventory_hostname }}-ltm-irule.yaml"
+  delegate_to: localhost

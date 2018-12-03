@@ -1,62 +1,20 @@
-- name: Add members to pools
-  bigip_pool_member:
+    - name: Add members to pools
+      bigip_pool_member:
 {%- raw %}
-    name: "{{ item.name }}"
-    pool: "{{ item.pool }}"
-    port: "{{ item.port }}"
-    description: "{{ item.description|default(omit) }}"
-    address: "{{ item.address|default(omit) }}"
-    fqdn: "{{ item.fqdn|default(omit) }}"
-    fqdn_auto_populate: "{{ item.fqdn_auto_populate|default(omit) }}"
-    connection_limit: "{{ item.connection_limit|default(omit) }}"
-    rate_limit: "{{ item.rate_limit|default(omit) }}"
-    ratio: "{{ item.ratio|default(omit) }}"
-    priority_group: "{{ item.priority_group|defualt(omit) }}"
-    monitors: "{{ item.monitors|default(omit) }}"
-    availability_requirements: "{{ item.availability_requirements|default(omit) }}"
-    provider: "{{ provider }}"
-  delegate_to: localhost
+        name: "{{ item.name }}"
+        pool: "{{ item.pool }}"
+        port: "{{ item.port }}"
+        description: "{{ item.description|default(omit) }}"
+        address: "{{ item.address|default(omit) }}"
+        fqdn: "{{ item.fqdn|default(omit) }}"
+        fqdn_auto_populate: "{{ item.fqdn_auto_populate|default(omit) }}"
+        connection_limit: "{{ item.connection_limit|default(omit) }}"
+        rate_limit: "{{ item.rate_limit|default(omit) }}"
+        ratio: "{{ item.ratio|default(omit) }}"
+        priority_group: "{{ item.priority_group|default(omit) }}"
+        monitors: "{{ item.monitors|default(omit) }}"
+        availability_requirements: "{{ item.availability_requirements|default(omit) }}"
+        provider: "{{ provider }}"
+      delegate_to: localhost
+      loop: "{{ ltm_pool_members }}"
 {% endraw %}
-  loop:
-{% for x in ltm_pools %}
-    - name: {{ x['MemberName'] }}
-      port: {{ x['MemberName'].split(':')[1] }}
-{% if x['PoolName'] != '' %}
-      pool: {{ x['PoolName'] }}
-{% endif %}
-{% if x['PoolMemberAddress'] != '' %}
-      address: {{ x['PoolMemberAddress'] }}
-{% endif %}
-{% if x['PoolMemberFqdn'] != '' %}
-      fqdn: {{ x['PoolMemberFqdn'] }}
-      fqdn_auto_populate: yes
-{% endif %}
-{% if x['Description'] != '' %}
-      description: {{ x['Description'] }}
-{% endif %}
-{% if x['ConnectionLimit'] != '' %}
-      connection_limit: {{ x['ConnectionLimit'] }}
-{% endif %}
-{% if x['RateLimit'] != '' %}
-      rate_limit: {{ x['RateLimit'] }}
-{% endif %}
-{% if x['Ratio'] != '' %}
-      ratio: {{ x['Ratio'] }}
-{% endif %}
-{% if x['PriorityGroup'] != '' %}
-      priority_group: {{ x['PriorityGroup'] }}
-{% endif %}
-{% if x['Monitor'] != '' %}
-      monitors:
-{% for monitor in x['Monitor']|monitors_list %}
-        - {{ monitor }}
-{% endfor %}
-      availability_requirements:
-{% if 'of {' in x['Monitor'] %}
-        type: at_least
-        at_least: {{ x['Monitor'].split(' ')[1] }}
-{% else %}
-        type: all
-{% endif %}
-{% endif %}
-{% endfor %}
