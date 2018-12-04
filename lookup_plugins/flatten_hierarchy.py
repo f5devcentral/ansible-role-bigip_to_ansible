@@ -49,16 +49,6 @@ class LookupModule(LookupBase):
 
     def run(self, terms, variables=None, **kwargs):
         """
-    - name: /Common/origin-sng.mobile.walmart.com-HTTP-monitor
-      parent: /Common/wmt-default-http-monitor
-    - name: /Common/torbit_health_ECV_80-monitor
-      parent: /Common/wmt-default-http-monitor
-    - name: /Common/torbit_health_ECV_80-monitor
-      parent: /Common/wmt-default-http-monitor
-    - name: /Common/wmt-default-http-monitor
-      parent: /Common/http
-
-
         :param terms:
         :param variables:
         :param kwargs:
