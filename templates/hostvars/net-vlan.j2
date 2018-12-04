@@ -1,0 +1,61 @@
+net_vlans:
+{% for x in raw_vlans %}
+  - name: {{ x['VlanName'] }}
+{% if x['Description'] != '' %}
+    description: {{ x['Description'] }}
+{% endif %}
+{% if x['Tag'] != '' %}
+    tag: {{ x['Tag'] }}
+{% endif %}
+{% if x['Mtu'] != '' %}
+    mtu: {{ x['Mtu'] }}
+{% endif %}
+{% if x['CmpHash'] != '' %}
+    cmp_hash: {{ x['CmpHash'] }}
+{% endif %}
+{% if x['PollInterval'] != '' %}
+    sflow_poll_interval: {{ x['PollInterval'] }}
+{% endif %}
+{% if x['SamplingRate'] != '' %}
+    sflow_sampling_rate: {{ x['SamplingRate'] }}
+{% endif %}
+{% if x['DagTunnel'] != '' %}
+    dag_tunnel: {{ x['DagTunnel'] }}
+{% endif %}
+{% if x['DagRoundRobin'] == 'enabled' %}
+    dag_round_robin: yes
+{% elif x['DagRoundRobin'] == 'disabled' %}
+    dag_round_robin: no
+{% endif %}
+{% if x['Failsafe'] == 'enabled' %}
+    fail_safe: yes
+{% elif x['Failsafe'] == 'disabled' %}
+    fail_safe: no
+{% endif %}
+{% if x['SourceChecking'] == 'enabled' %}
+    source_check: yes
+{% elif x['SourceChecking'] == 'disabled' %}
+    source_check: no
+{% endif %}
+{% if x['FailsafeAction'] != '' %}
+    fail_safe_action: {{ x['FailsafeAction'] }}
+{% endif %}
+{% if x['FailsafeTimeout'] != '' %}
+    fail_safe_timeout: {{ x['FailsafeTimeout'] }}
+{% endif %}
+{% if x['Interfaces']|count > 0 or x['TaggedInterfaces']|count > 0 %}
+    interfaces:
+{% if x['Interfaces']|count > 0 %}
+{% for y in x['Interfaces'] %}
+      - name: {{ y }}
+        tagging: untagged
+{% endfor %}
+{% endif %}
+{% if x['TaggedInterfaces']|count > 0 %}
+{% for y in x['TaggedInterfaces'] %}
+      - name: {{ y }}
+        tagging: tagged
+{% endfor %}
+{% endif %}
+{% endif %}
+{% endfor %}

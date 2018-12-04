@@ -1,0 +1,12 @@
+---
+
+- name: Assign any discovered provisioned modules to a local fact
+  set_fact:
+    provisioned_modules: "{{ bigip_conf | parse_cli_textfsm(role_path + '/files/textfsm/sys-provision.txt') }}"
+  delegate_to: localhost
+
+- name: Template provisioned modules out to a file
+  template:
+    src: hostvars/sys-provision.j2
+    dest: "{{ bigip_to_ansible_output_assemble }}/{{ inventory_hostname }}-sys-provision.yaml"
+  delegate_to: localhost

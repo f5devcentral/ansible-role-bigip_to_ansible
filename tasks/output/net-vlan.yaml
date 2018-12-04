@@ -1,0 +1,12 @@
+---
+
+- name: Assign any discovered VLANs to a local fact
+  set_fact:
+    raw_vlans: "{{ bigip_conf | parse_cli_textfsm(role_path + '/files/textfsm/net-vlan.txt') }}"
+  delegate_to: localhost
+
+- name: Template VLANs out to a file
+  template:
+    src: hostvars/net-vlan.j2
+    dest: "{{ bigip_to_ansible_output_assemble }}/{{ inventory_hostname }}-net-vlan.yaml"
+  delegate_to: localhost

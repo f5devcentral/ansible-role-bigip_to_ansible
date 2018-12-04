@@ -9,6 +9,10 @@
     - role: f5devcentral.f5ansible
 
   tasks:
+{% include "sys-provision.j2" %}
+
+{% include "net-vlan.j2" %}
+
 {% include "ltm-irule.j2" %}
 
 {% include "ltm-http-monitor.j2" %}

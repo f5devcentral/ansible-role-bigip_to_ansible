@@ -1,0 +1,24 @@
+    - name: Create VLANs
+      bigip_vlan:
+{%- raw %}
+        name: "{{ item.name }}"
+        description: "{{ item.description|default(omit) }}"
+        tag: "{{ item.tag|default(omit) }}"
+        mtu: "{{ item.mtu|default(omit) }}"
+        fail_safe: "{{ item.fail_safe|default(omit) }}"
+        fail_safe_action: "{{ item.fail_safe_action|default(omit) }}"
+        fail_safe_timeout: "{{ item.fail_safe_timeout|default(omit) }}"
+        interfaces: "{{ item.interfaces|default(omit) }}"
+        cmp_hash: "{{ item.cmp_hash|default(omit) }}"
+        dag_tunnel: "{{ item.dag_tunnel|default(omit) }}"
+        dag_round_robin: "{{ item.dag_round_robin|default(omit) }}"
+        source_check: "{{ item.source_check|default(omit) }}"
+        sflow_poll_interval: "{{ item.sflow_poll_interval|default(omit) }}"
+        sflow_sampling_rate: "{{ item.sflow_sampling_rate|default(omit) }}"
+        provider: "{{ provider }}"
+      delegate_to: localhost
+      loop: "{{ raw_vlans }}"
+      tags:
+        - vlans
+        - onboarding
+{% endraw %}

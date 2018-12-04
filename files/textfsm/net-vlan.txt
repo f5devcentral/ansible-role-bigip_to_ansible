@@ -1,0 +1,45 @@
+Value Required VlanName (.*)
+Value Description (.*)
+Value Tag (.*)
+Value Mtu (.*)
+Value Failsafe (enabled|disabled)
+Value FailsafeAction (.*)
+Value FailsafeTimeout (.*)
+Value CmpHash (.*)
+Value DagTunnel (outer|inner)
+Value DagRoundRobin (enabled|disabled)
+Value SourceChecking (enabled|disabled)
+Value PollInterval (.*)
+Value SamplingRate (.*)
+Value List Interfaces (.*)
+Value List TaggedInterfaces (.*)
+
+Start
+  ^#TMSH-VERSION:.* -> Vlan
+
+Vlan
+  ^net vlan ${VlanName} {
+  ^    description "${Description}"
+  ^    description ${Description}
+  ^    failsafe ${Failsafe}
+  ^    failsafe-action ${FailsafeAction}
+  ^    failsafe-timeout ${FailsafeTimeout}
+  ^    dag-tunnel ${DagTunnel}
+  ^    dag-round-robin ${DagRoundRobin}
+  ^    tag ${Tag}
+  ^    mtu ${Mtu}
+  ^    cmp-hash ${CmpHash}
+  ^    source-checking ${SourceChecking}
+  ^    sflow { -> Sflow
+  ^    interfaces { -> Interfaces
+  ^} -> Record
+
+Interfaces
+  ^        ${Interfaces} { }
+  ^        ${TaggedInterfaces} {
+  ^    } -> Vlan
+
+Sflow
+  ^        poll-interval ${PollInterval}
+  ^        sampling-rate ${SamplingRate}
+  ^    } -> Vlan

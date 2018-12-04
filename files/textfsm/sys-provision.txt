@@ -1,0 +1,10 @@
+Value Required Module (.*)
+Value Level (.*)
+
+Start
+  ^#TMSH-VERSION:.* -> Module
+
+Module
+  ^sys provision ${Module} {
+  ^    level ${Level}
+  ^} -> Next.Record

@@ -1,0 +1,12 @@
+    - name: Provision modules
+      bigip_provision:
+{%- raw %}
+        name: "{{ item.name }}"
+        level: "{{ item.level|default(omit) }}"
+        provider: "{{ provider }}"
+      delegate_to: localhost
+      loop: "{{ provisioned_modules }}"
+      tags:
+        - module-provisioning
+        - onboarding
+{% endraw %}

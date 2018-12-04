@@ -1,0 +1,7 @@
+provisioned_modules:
+{% for x in provisioned_modules %}
+  - name: {{ x['Module'] }}
+{% if x['Level'] != '' %}
+    level: {{ x['Level'] }}
+{% endif %}
+{% endfor %}
