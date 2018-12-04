@@ -16,4 +16,8 @@
         provider: "{{ provider }}"
       delegate_to: localhost
       loop: "{{ ltm_virtual_servers }}"
+      tags:
+        - ltm-virtual-server
+        - virtuals
+        - virtual-servers
 {% endraw %}

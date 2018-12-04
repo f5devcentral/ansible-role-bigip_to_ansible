@@ -14,4 +14,7 @@
         provider: "{{ provider }}"
       delegate_to: localhost
       loop: "{{ http_monitors }}"
+      tags:
+        - http-monitors
+        - monitors
 {% endraw %}

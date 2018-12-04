@@ -13,4 +13,7 @@
         provider: "{{ provider }}"
       delegate_to: localhost
       loop: "{{ tcp_monitors }}"
+      tags:
+        - tcp-monitors
+        - monitors
 {% endraw %}

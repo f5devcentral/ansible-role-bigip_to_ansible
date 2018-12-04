@@ -7,4 +7,8 @@
         provider: "{{ provider }}"
       delegate_to: localhost
       loop: "{{ ltm_irules }}"
+      tags:
+        - ltm-irules
+        - irules
+        - irule
 {% endraw %}

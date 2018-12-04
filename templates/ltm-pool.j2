@@ -6,4 +6,8 @@
         provider: "{{ provider }}"
       delegate_to: localhost
       loop: "{{ ltm_pools }}"
+      tags:
+        - ltm-pools
+        - pool
+        - pools
 {% endraw %}
